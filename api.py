@@ -31,9 +31,9 @@ clip_model = None
 clip_processor = None
 device = None
 
-@app.before_first_request
+# Replace before_first_request with initialization function
 def initialize():
-    """Initialize the models and client before the first request."""
+    """Initialize the models and client."""
     global client, text_model, clip_model, clip_processor, device
     
     logger.info("Initializing Qdrant client and models...")
@@ -44,6 +44,10 @@ def initialize():
     except Exception as e:
         logger.error(f"Initialization failed: {str(e)}")
         raise
+
+# Initialize when the application starts
+with app.app_context():
+    initialize()
 
 @app.route('/search', methods=['POST'])
 def search():
@@ -120,9 +124,6 @@ def health_check():
     return jsonify({"status": "ok"})
 
 if __name__ == '__main__':
-    # Initialize on startup
-    initialize()
-    
     # Get port from environment variable or use 8000 as default
     port = int(os.environ.get("PORT", 8000))
     
