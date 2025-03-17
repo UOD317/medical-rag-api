@@ -54,7 +54,7 @@ Health check endpoint to verify the API is running.
 1. Connect to your GitHub repository
 2. Use the following settings:
    - Runtime: Python 3
-   - Build Command: `pip install -r requirements_api.txt`
+   - Build Command: `pip install -r requirements.txt`
    - Start Command: `gunicorn api:app`
 
 ## Custom GPT Integration
@@ -106,4 +106,4 @@ Configure your Custom GPT with the following schema:
     }
   }
 }
-``` 
+```
