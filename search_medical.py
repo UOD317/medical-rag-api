@@ -21,7 +21,6 @@ from typing import List, Dict, Any, Optional
 
 import torch
 from qdrant_client import QdrantClient
-from qdrant_client.http.models import SearchRequest
 from sentence_transformers import SentenceTransformer
 from transformers import CLIPProcessor, CLIPModel
 
@@ -115,49 +114,27 @@ def search_medical_database(client: QdrantClient,
     if text_query:
         text_vector = create_text_embedding(text_query, text_model)
         try:
-            # Try the new API method
-            text_results = client.query_points(
+            text_results = client.search(
                 collection_name=TEXT_COLLECTION,
-                vector=text_vector,
+                query_vector=text_vector,
                 limit=limit
             )
-            results["text"] = text_results.points
+            results["text"] = text_results
         except Exception as e:
-            print(f"Error with query_points: {e}")
-            # Fall back to the deprecated method
-            try:
-                text_results = client.search(
-                    collection_name=TEXT_COLLECTION,
-                    query_vector=text_vector,
-                    limit=limit
-                )
-                results["text"] = text_results
-            except Exception as e2:
-                print(f"Error with search fallback: {e2}")
+            print(f"Error searching text collection: {e}")
     
     # Search images if query provided
     if image_query:
         image_vector = create_image_embedding(image_query, clip_model, clip_processor, device)
         try:
-            # Try the new API method
-            image_results = client.query_points(
+            image_results = client.search(
                 collection_name=IMAGE_COLLECTION,
-                vector=image_vector,
+                query_vector=image_vector,
                 limit=limit
             )
-            results["image"] = image_results.points
+            results["image"] = image_results
         except Exception as e:
-            print(f"Error with query_points for images: {e}")
-            # Fall back to the deprecated method
-            try:
-                image_results = client.search(
-                    collection_name=IMAGE_COLLECTION,
-                    query_vector=image_vector,
-                    limit=limit
-                )
-                results["image"] = image_results
-            except Exception as e2:
-                print(f"Error with search fallback for images: {e2}")
+            print(f"Error searching image collection: {e}")
     
     return results
 
