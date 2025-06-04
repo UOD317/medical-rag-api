@@ -31,9 +31,9 @@ Search the medical database with text or image queries.
   "image_results": [
     {
       "score": 0.78,
-      "source": "Fitzpatricks Color Atlas",
+      "source": "Fitzpatrick's Color Atlas",
       "page": "15",
-      "original_id": "Fitzpatricks_Color_Atlas_page_15_image_1"
+      "original_id": "Fitzpatrick's_Color_Atlas_page_15_image_1"
     }
   ]
 }
